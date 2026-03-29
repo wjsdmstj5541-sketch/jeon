@@ -1,0 +1,9 @@
+# .gitignore
+.DS_Store
+jakjeon_imgs/
+ghibli_imgs/
+작전 이미지/
+귀를 기울이면 이미지/
+generate.py
+output.css
+index.html

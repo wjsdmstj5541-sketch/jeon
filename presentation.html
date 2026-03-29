@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영화 발표 — 전계현</title>
+  <meta name="description" content="작전 & 귀를 기울이면 영화 분석 발표. 전계현, 계원예술대학교 22319055" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --red: #FF3B30;
+      --amber: #FF9F0A;
+      --dark: #0a0a0a;
+      --white: #ffffff;
+      --gray: #86868b;
+      --light-bg: #faf8f4;
+      --warm-bg: #f0ece4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    /* ── TOP PROGRESS BAR ── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(to right, var(--red), var(--amber));
+      z-index: 9999;
+      transition: width 0.1s linear;
+    }
+
+    /* ── TOP NAV ── */
+    #top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.0);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.0);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #top-nav.scrolled {
+      background: rgba(0,0,0,0.7);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.film1 { color: var(--red); }
+    .nav-links a.film2 { color: var(--amber); }
+
+    /* ── SIDE DOTS ── */
+    #side-dots {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: all 0.35s;
+    }
+    .dot.active {
+      background: var(--white);
+      transform: scale(2);
+    }
+    .dot.red-dot.active { background: var(--red); }
+    .dot.amber-dot.active { background: var(--amber); }
+
+    /* ── ANIMATE IN ── */
+    .ai {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+    }
+    .ai.d1 { transition-delay: 0.05s; }
+    .ai.d2 { transition-delay: 0.15s; }
+    .ai.d3 { transition-delay: 0.25s; }
+    .ai.d4 { transition-delay: 0.35s; }
+    .ai.d5 { transition-delay: 0.45s; }
+    .ai.d6 { transition-delay: 0.55s; }
+    .ai.visible { opacity: 1; transform: translateY(0); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       HERO
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 24px 60px;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,59,48,0.12) 0%, transparent 65%);
+      top: 50%; left: 28%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,159,10,0.12) 0%, transparent 65%);
+      top: 50%; left: 72%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .hero-kicker {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 36px;
+    }
+    .hero-films {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hero-film-name {
+      font-size: clamp(52px, 9vw, 108px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .hero-film-name.red { color: var(--red); }
+    .hero-film-name.amber { color: var(--amber); }
+    .hero-slash {
+      font-size: clamp(52px, 9vw, 108px);
+      font-weight: 200;
+      color: rgba(255,255,255,0.15);
+      margin: 0 20px;
+      line-height: 1;
+    }
+    .hero-sub {
+      margin-top: 40px;
+      font-size: 17px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.06em;
+      line-height: 1.9;
+    }
+    .hero-sub span { color: rgba(255,255,255,0.7); font-weight: 500; }
+    .scroll-cue {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.25);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      animation: cueBounce 2.2s ease-in-out infinite;
+    }
+    .scroll-cue-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.25));
+    }
+    @keyframes cueBounce {
+      0%,100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 1; transform: translateX(-50%) translateY(7px); }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FILM HEADER (Full-screen title)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .film-header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 32px;
+      position: relative;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+    .film-header-overlay {
+      position: absolute;
+      inset: 0;
+    }
+    #jj-header { background: url('jakjeon_bg.png') center/cover no-repeat; }
+    #jj-header .film-header-overlay {
+      background: rgba(0,0,0,0.72);
+    }
+    #kt-header { background: url('ghibli_bg.png') center/cover no-repeat; }
+    #kt-header .film-header-overlay {
+      background: rgba(255,248,235,0.78);
+    }
+    .film-header-content { position: relative; z-index: 1; }
+    .film-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 30px;
+      margin-bottom: 24px;
+    }
+    .film-badge.red {
+      background: rgba(255,59,48,0.15);
+      color: var(--red);
+      border: 1px solid rgba(255,59,48,0.35);
+    }
+    .film-badge.amber {
+      background: rgba(255,159,10,0.15);
+      color: #b36a00;
+      border: 1px solid rgba(255,159,10,0.4);
+    }
+    .film-big-title {
+      font-size: clamp(64px, 14vw, 160px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 28px;
+    }
+    .film-big-title.light { color: #2a1a00; }
+    .film-big-title.dark { color: #fff; }
+    .film-meta-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .film-meta-pill {
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+    .film-meta-pill.dark {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .film-meta-pill.light {
+      background: rgba(0,0,0,0.07);
+      color: rgba(30,15,0,0.65);
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+    .film-logline-preview {
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .film-logline-preview.dark { color: rgba(255,255,255,0.55); }
+    .film-logline-preview.light { color: rgba(30,15,0,0.55); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       GENERIC CONTENT SECTION
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .content-section {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 0;
+    }
+    .inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 48px;
+      width: 100%;
+    }
+    .sec-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .sec-label::after {
+      content: '';
+      height: 1px;
+      width: 36px;
+    }
+    .sec-label.red { color: var(--red); }
+    .sec-label.red::after { background: var(--red); }
+    .sec-label.amber { color: #b36a00; }
+    .sec-label.amber::after { background: #b36a00; }
+
+    /* ── BG CLASSES ── */
+    .bg-black { background: #000; }
+    .bg-dark { background: var(--dark); }
+    .bg-dark-2 { background: #111; }
+    .bg-light { background: var(--light-bg); }
+    .bg-warm { background: var(--warm-bg); }
+    .bg-white { background: #fff; }
+
+    /* ── KEYWORDS ── */
+    .keywords-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .kw {
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 14px;
+      letter-spacing: -0.01em;
+      transition: transform 0.25s;
+    }
+    .kw:hover { transform: scale(1.05); }
+    .kw.dark {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .kw.dark.accent { color: var(--red); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.08); }
+    .kw.light {
+      background: rgba(0,0,0,0.05);
+      color: rgba(30,15,0,0.8);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .kw.light.accent { color: #b36a00; border-color: rgba(255,159,10,0.35); background: rgba(255,159,10,0.08); }
+
+    /* ── STORY ── */
+    .logline-text {
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      margin-bottom: 40px;
+    }
+    .logline-text.dark { color: #fff; }
+    .logline-text.light { color: #1d1000; }
+
+    .synopsis-body {
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.9;
+      max-width: 720px;
+    }
+    .synopsis-body.dark { color: rgba(255,255,255,0.6); }
+    .synopsis-body.light { color: rgba(30,15,0,0.6); }
+
+    /* ── REASON ── */
+    .reason-body {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.95;
+      max-width: 760px;
+    }
+    .reason-body.dark { color: rgba(255,255,255,0.65); }
+    .reason-body.light { color: rgba(30,15,0,0.65); }
+    .reason-body strong {
+      font-weight: 700;
+    }
+    .reason-body.dark strong { color: #fff; }
+    .reason-body.light strong { color: #1d1000; }
+
+    /* ── OASIS / BIG QUOTE ── */
+    .oasis-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 40px;
+      position: relative;
+    }
+    .oasis-section.dark { background: #000; }
+    .oasis-section.light { background: #fff8ee; }
+    .oasis-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    .oasis-label.red { color: var(--red); }
+    .oasis-label.amber { color: #b36a00; }
+    .giant-quote {
+      font-size: clamp(22px, 4vw, 40px);
+      font-weight: 700;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+      max-width: 820px;
+      position: relative;
+    }
+    .giant-quote.dark { color: #fff; }
+    .giant-quote.light { color: #1d1000; }
+    .giant-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -40px;
+      left: -20px;
+      font-size: 120px;
+      font-family: Georgia, serif;
+      line-height: 1;
+      opacity: 0.08;
+    }
+    .quote-sep {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.15);
+      margin: 36px auto;
+    }
+    .quote-sep.light { background: rgba(0,0,0,0.12); }
+    .giant-quote-2 {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 600;
+      line-height: 1.6;
+      letter-spacing: -0.015em;
+      max-width: 720px;
+      opacity: 0.75;
+    }
+    .giant-quote-2.dark { color: rgba(255,255,255,0.8); }
+    .giant-quote-2.light { color: rgba(30,15,0,0.75); }
+    .oasis-attr {
+      margin-top: 40px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      opacity: 0.3;
+    }
+
+    /* ── REVIEWS ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .review-card {
+      padding: 32px;
+      border-radius: 20px;
+      position: relative;
+    }
+    .review-card.dark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .review-card.light {
+      background: rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .review-quote-mark {
+      font-family: Georgia, serif;
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 16px;
+      opacity: 0.2;
+    }
+    .review-quote-mark.red { color: var(--red); opacity: 0.5; }
+    .review-quote-mark.amber { color: var(--amber); opacity: 0.5; }
+    .review-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+    .review-text.dark { color: rgba(255,255,255,0.75); }
+    .review-text.light { color: rgba(30,15,0,0.7); }
+    .review-author {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .review-author.red { color: var(--red); }
+    .review-author.amber { color: #b36a00; }
+    .review-role {
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 2px;
+      opacity: 0.4;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FILM TRANSITION DIVIDER
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #film-divider {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 40px;
+    }
+    #film-divider::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,59,48,0.06) 0%, transparent 50%, rgba(255,159,10,0.06) 100%);
+    }
+    .divider-line {
+      width: 100%;
+      max-width: 600px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,59,48,0.5), rgba(255,159,10,0.5), transparent);
+      margin: 48px 0;
+    }
+    .divider-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 32px;
+    }
+    .divider-next {
+      font-size: clamp(44px, 9vw, 100px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .divider-sub {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       OUTRO
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #outro {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      text-align: center;
+      padding: 80px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    #outro::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(255,159,10,0.07) 0%, transparent 60%);
+    }
+    .outro-kicker {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 32px;
+    }
+    .outro-big {
+      font-size: clamp(56px, 12vw, 130px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .outro-meta {
+      margin-top: 48px;
+      font-size: 16px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+      line-height: 2;
+      letter-spacing: 0.04em;
+    }
+    .outro-meta strong {
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+    }
+    .sources-section {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      line-height: 2;
+    }
+    .sources-section a {
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .sources-section a:hover { color: rgba(255,255,255,0.6); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       RESPONSIVE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    @media (max-width: 640px) {
+      .inner { padding: 0 24px; }
+      #side-dots { display: none; }
+      .nav-links { display: none; }
+      .giant-quote::before { display: none; }
+    }
+
+    /* ── IMAGE GALLERY ── */
+    .gallery-section {
+      padding: 60px 0 80px;
+    }
+    .gallery-header {
+      padding: 0 48px;
+      margin-bottom: 32px;
+    }
+    .gallery-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 0 48px 20px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: grab;
+    }
+    .gallery-scroll:active { cursor: grabbing; }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+    .gallery-scroll img {
+      height: 340px;
+      width: auto;
+      min-width: 240px;
+      max-width: 560px;
+      border-radius: 14px;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      object-fit: cover;
+      transition: transform 0.3s, opacity 0.3s;
+      display: block;
+    }
+    .gallery-scroll img:hover {
+      transform: scale(1.02);
+      opacity: 0.95;
+    }
+    .gallery-hint {
+      padding: 0 48px;
+      margin-top: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.3;
+    }
+    @media (max-width: 640px) {
+      .gallery-scroll { padding: 0 24px 16px; }
+      .gallery-header, .gallery-hint { padding: 0 24px; }
+      .gallery-scroll img { height: 220px; }
+    }
+
+    /* ── WATERMARK ── */
+    .content-section { position: relative; overflow: hidden; }
+    .inner { position: relative; z-index: 1; }
+    .watermark {
+      position: absolute;
+      font-size: clamp(100px, 18vw, 220px);
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      line-height: 1;
+      opacity: 0.032;
+    }
+    .watermark.dark { color: #ffffff; }
+    .watermark.light { color: #000000; }
+
+    /* ── KEYWORD COUNT BADGE ── */
+    .kw-count {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: 2px 9px;
+      border-radius: 20px;
+      margin-left: 10px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .kw-count.red  { background: rgba(255,59,48,0.12);  color: var(--red);  border: 1px solid rgba(255,59,48,0.25); }
+    .kw-count.amber{ background: rgba(255,159,10,0.12); color: #b36a00; border: 1px solid rgba(255,159,10,0.3); }
+
+    /* ── FACT PILL ── */
+    .fact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      margin-top: 36px;
+    }
+    .fact-pill.dark  { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); }
+    .fact-pill.light { background: rgba(0,0,0,0.04);       border: 1px solid rgba(0,0,0,0.09); }
+    .fact-tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .fact-tag.red   { background: var(--red);  color: #fff; }
+    .fact-tag.amber { background: #b36a00; color: #fff; }
+    .fact-body { font-size: 15px; font-weight: 500; line-height: 1.5; }
+    .fact-body.dark  { color: rgba(255,255,255,0.6); }
+    .fact-body.light { color: rgba(30,15,0,0.6); }
+
+    /* ── QUOTE LINES (cascade) ── */
+    .quote-lines { display: flex; flex-direction: column; gap: 2px; }
+    .qline {
+      display: block;
+      font-size: clamp(22px, 4vw, 40px);
+      font-weight: 700;
+      line-height: 1.4;
+      letter-spacing: -0.025em;
+    }
+    .qline.dark  { color: #fff; }
+    .qline.light { color: #1d1000; }
+    .qline.accent-red   { color: var(--red); }
+    .qline.accent-amber { color: #b36a00; }
+    .qline-sm {
+      display: block;
+      font-size: clamp(18px, 3vw, 30px);
+      font-weight: 600;
+      line-height: 1.5;
+      letter-spacing: -0.015em;
+      opacity: 0.72;
+    }
+    .qline-sm.dark  { color: rgba(255,255,255,0.8); }
+    .qline-sm.light { color: rgba(30,15,0,0.75); }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img {
+      max-width: 90vw;
+      max-height: 88vh;
+      border-radius: 14px;
+      object-fit: contain;
+      cursor: default;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      animation: lbIn 0.25s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes lbIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lb-close {
+      position: fixed;
+      top: 20px; right: 28px;
+      font-size: 28px;
+      color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 100000;
+    }
+    .lb-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .lb-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 28px;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 100000;
+    }
+    .lb-arrow:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .lb-arrow:disabled { opacity: 0.2; cursor: default; }
+    .lb-prev { left: 24px; }
+    .lb-next { right: 24px; }
+    .lb-hint {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .gallery-scroll img { cursor: zoom-in !important; }
+  </style>
+</head>
+<body>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  <button class="lb-arrow lb-prev" onclick="event.stopPropagation();moveImage(-1)">&#8592;</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+  <button class="lb-arrow lb-next" onclick="event.stopPropagation();moveImage(1)">&#8594;</button>
+  <p class="lb-hint"><span id="lb-counter"></span> &nbsp;·&nbsp; ESC 또는 클릭하여 닫기</p>
+</div>
+
+<!-- ── PROGRESS BAR ── -->
+<div id="progress-bar"></div>
+
+<!-- ── TOP NAV ── -->
+<nav id="top-nav">
+  <span class="nav-logo">JEON GYEHYUN · 2025</span>
+  <ul class="nav-links">
+    <li><a href="#hero">INTRO</a></li>
+    <li><a href="#jj-header" class="film1">작전</a></li>
+    <li><a href="#kt-header" class="film2">귀를 기울이면</a></li>
+    <li><a href="#outro">FIN</a></li>
+  </ul>
+</nav>
+
+<!-- ── SIDE DOTS ── -->
+<div id="side-dots">
+  <div class="dot" data-target="hero"></div>
+  <div class="dot red-dot" data-target="jj-header"></div>
+  <div class="dot red-dot" data-target="jj-keywords"></div>
+  <div class="dot red-dot" data-target="jj-story"></div>
+  <div class="dot red-dot" data-target="jj-reason"></div>
+  <div class="dot red-dot" data-target="jj-oasis"></div>
+  <div class="dot red-dot" data-target="jj-reviews"></div>
+
+  <div class="dot amber-dot" data-target="kt-header"></div>
+  <div class="dot amber-dot" data-target="kt-keywords"></div>
+  <div class="dot amber-dot" data-target="kt-story"></div>
+  <div class="dot amber-dot" data-target="kt-reason"></div>
+  <div class="dot amber-dot" data-target="kt-oasis"></div>
+  <div class="dot amber-dot" data-target="kt-reviews"></div>
+  <div class="dot" data-target="outro"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section id="hero" data-section="0">
+  <p class="hero-kicker ai d1">영화 분석 발표 · 계원예술대학교 · 22319055</p>
+  <div class="hero-films ai d2">
+    <span class="hero-film-name red">작전</span>
+    <span class="hero-slash">/</span>
+    <span class="hero-film-name amber">귀를 기울이면</span>
+  </div>
+  <p class="hero-sub ai d3">
+    두 편의 영화가 말하는 것 —<br />
+    <span>돈과 욕망</span>, 그리고 <span>꿈과 성장</span>
+  </p>
+  <div class="scroll-cue ai d4">
+    <div class="scroll-cue-line"></div>
+    SCROLL
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     FILM 1 — 작전
+══════════════════════════════════════════ -->
+
+<!-- 1-A. Header -->
+<section id="jj-header" class="film-header" data-section="1">
+  <div class="film-header-overlay"></div>
+  <div class="film-header-content">
+    <div class="film-badge red ai d1">FILM 01 · 2009 · 범죄 스릴러</div>
+    <h1 class="film-big-title dark ai d2">작전</h1>
+    <div class="film-meta-row ai d3">
+      <span class="film-meta-pill dark">주식 · 경제 · 조작</span>
+      <span class="film-meta-pill dark">스릴러 / 코미디</span>
+      <span class="film-meta-pill dark">박용하 · 김민정 · 박희순</span>
+    </div>
+    <p class="film-logline-preview dark ai d4">
+      지금도 한국 주식시장에서 일어나는 이야기
+    </p>
+  </div>
+</section>
+
+<!-- 1-B. 핵심어 -->
+<section id="jj-keywords" class="content-section bg-dark" data-section="2">
+  <div class="inner">
+    <p class="sec-label red ai">KEYWORDS — 핵심어 <span class="kw-count red">12</span></p>
+    <div class="keywords-wrap">
+      <span class="kw dark accent ai d1">#주식</span>
+      <span class="kw dark accent ai d2">#조작</span>
+      <span class="kw dark accent ai d3">#사기</span>
+      <span class="kw dark accent ai d4">#범죄</span>
+      <span class="kw dark ai d5">#경제</span>
+      <span class="kw dark ai d6">#시장</span>
+      <span class="kw dark ai d1">#돈</span>
+      <span class="kw dark ai d2">#자금</span>
+      <span class="kw dark ai d3">#스릴</span>
+      <span class="kw dark ai d4">#현실</span>
+      <span class="kw dark ai d5">#자본</span>
+      <span class="kw dark ai d6">#인생역전</span>
+    </div>
+  </div>
+</section>
+
+<!-- 1-C. 줄거리 -->
+<section id="jj-story" class="content-section bg-black" data-section="3">
+  <div class="watermark dark">작전</div>
+  <div class="inner">
+    <p class="sec-label red ai">STORY — 로그라인 + 줄거리</p>
+    <p class="logline-text dark ai d1">
+      신용불량자가 조폭의 주식 작전에 뛰어들다.<br />
+      배신과 욕망이 뒤엉킨 주식시장의 민낯.
+    </p>
+    <p class="synopsis-body dark ai d2">
+      주식으로 인생역전을 꿈꾸는 신용불량자 강현수.
+      어느 날 그는 조폭이 진행 중인 주식 작전주에 엮이게 되고,
+      서로 이익을 위해 한배를 타게 된다.
+      그러나 서로를 배신하며 작전은 물거품이 되어버리고,
+      잃어버린 수익을 되찾기 위한 처절한 발버둥이 시작된다.<br /><br />
+      한국 상업 영화계 최초로 <strong style="color:#fff">주식을 핵심 소재</strong>로 삼은 작품.
+      겉으로는 통쾌한 범죄 코미디이지만,
+      그 안에는 불투명한 주식시장의 어두운 민낯이 가득하다.
+    </p>
+    <div class="fact-pill dark ai d3">
+      <span class="fact-tag red">FACT</span>
+      <span class="fact-body dark">한국 상업 영화 최초 주식 소재 작품 · 2009년 개봉</span>
+    </div>
+  </div>
+</section>
+
+<!-- 1-C2. 작전 이미지 갤러리 -->
+<div class="gallery-section bg-black ai">
+  <div class="gallery-header">
+    <p class="sec-label red" style="margin-bottom:0">STILLS — 스틸 이미지</p>
+  </div>
+  <div class="gallery-scroll" id="jj-gallery-scroll">
+    <img src="jakjeon_final/1.jpg" onclick="openLightbox(this)" alt="작전 스틸 1" />
+    <img src="jakjeon_final/2.jpg" onclick="openLightbox(this)" alt="작전 스틸 2" />
+    <img src="jakjeon_final/3.jpg" onclick="openLightbox(this)" alt="작전 스틸 3" />
+    <img src="jakjeon_final/4.jpg" onclick="openLightbox(this)" alt="작전 스틸 4" />
+    <img src="jakjeon_final/5.jpg" onclick="openLightbox(this)" alt="작전 스틸 5" />
+    <img src="jakjeon_final/6.jpg" onclick="openLightbox(this)" alt="작전 스틸 6" />
+    <img src="jakjeon_final/7.jpg" onclick="openLightbox(this)" alt="작전 스틸 7" />
+    <img src="jakjeon_final/8.jpg" onclick="openLightbox(this)" alt="작전 스틸 8" />
+  </div>
+  <p class="gallery-hint" style="color:rgba(255,255,255,0.3)">← 드래그하여 더 보기</p>
+</div>
+
+<!-- 1-D. 선택 이유 -->
+<section id="jj-reason" class="content-section bg-dark" data-section="4">
+  <div class="watermark dark">MARKET</div>
+  <div class="inner">
+    <p class="sec-label red ai">REASON — 작품 선정 이유</p>
+    <p class="reason-body dark ai d1">
+      현재 국내 주식시장은 그 어느 때보다 활발해지고 있습니다.
+      주식을 하는 사람을 정말 쉽게 찾아볼 수 있습니다.
+      그러나 우리가 투자하는 국내 주식시장은 <strong>정말 안전할까요?</strong><br /><br />
+      모든 회사가 정직함을 가지고, 주주들에게 환원하며
+      건전한 경영을 위해 최선을 다할까요?
+      우리에게는 드러나지 않아 몰랐던 주식시장의 못난 부분을
+      여실하게 보여주는 영화 〈작전〉.
+      <strong>주식을 하기 전에 한 번쯤 봐야 하는 영화</strong>라고 생각합니다.
+    </p>
+  </div>
+</section>
+
+<!-- 1-E. 오아시스 -->
+<section id="jj-oasis" class="oasis-section dark" data-section="5">
+  <p class="oasis-label red ai">MY OASIS — 내 오아시스</p>
+  <div class="quote-lines">
+    <span class="qline dark ai d1">맨날 세력한테 당했네,</span>
+    <span class="qline dark ai d2">작전주에 말렸네 우는 소리하지?</span>
+    <span class="qline accent-red ai d3">머리가 안 좋아서 깡통 찼다는 말은 못해요.</span>
+  </div>
+  <div class="quote-sep ai d4"></div>
+  <div class="quote-lines">
+    <span class="qline-sm dark ai d4">바닥인 줄 알고 사는 개미들,</span>
+    <span class="qline-sm dark ai d5">지하실을 구경하게 될 겁니다.</span>
+  </div>
+  <p class="oasis-attr ai d6">— 영화 〈작전〉 중</p>
+</section>
+
+<!-- 1-F. 평론 -->
+<section id="jj-reviews" class="content-section bg-dark-2" data-section="6">
+  <div class="inner">
+    <p class="sec-label red ai">CRITICS — 평론</p>
+    <div class="reviews-grid">
+      <div class="review-card dark ai d1">
+        <div class="review-quote-mark red">"</div>
+        <p class="review-text dark">몹시 난해한 이야기를 몹시 재미나게 조리하는 능력</p>
+        <p class="review-author red">고경태</p>
+        <p class="review-role dark">영화 평론가</p>
+      </div>
+      <div class="review-card dark ai d2">
+        <div class="review-quote-mark red">"</div>
+        <p class="review-text dark">한국식 돈놀이의 천박한 풍경을 이만큼 유쾌하게 풀어낸 용기에 박수!</p>
+        <p class="review-author red">김용언</p>
+        <p class="review-role dark">영화 평론가</p>
+      </div>
+      <div class="review-card dark ai d3">
+        <div class="review-quote-mark red">"</div>
+        <p class="review-text dark">용두사미 또는 작전미스</p>
+        <p class="review-author red">박평식</p>
+        <p class="review-role dark">영화 평론가</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ══════════════════════════════════════════
+     FILM 2 — 귀를 기울이면
+══════════════════════════════════════════ -->
+
+<!-- 2-A. Header -->
+<section id="kt-header" class="film-header" data-section="8">
+  <div class="film-header-overlay"></div>
+  <div class="film-header-content">
+    <div class="film-badge amber ai d1">FILM 02 · 1995 · Studio Ghibli</div>
+    <h2 class="film-big-title light ai d2">귀를 기울이면</h2>
+    <div class="film-meta-row ai d3">
+      <span class="film-meta-pill light">성장 · 청춘 · 꿈</span>
+      <span class="film-meta-pill light">로맨스 / 드라마 / 애니메이션</span>
+      <span class="film-meta-pill light">콘도 요시후미 감독</span>
+    </div>
+    <p class="film-logline-preview light ai d4">
+      자신의 꿈을 향해 나아갈 용기를 주는 영화
+    </p>
+  </div>
+</section>
+
+<!-- 2-B. 핵심어 -->
+<section id="kt-keywords" class="content-section bg-light" data-section="9">
+  <div class="inner">
+    <p class="sec-label amber ai">KEYWORDS — 핵심어 <span class="kw-count amber">12</span></p>
+    <div class="keywords-wrap">
+      <span class="kw light accent ai d1">#꿈</span>
+      <span class="kw light accent ai d2">#성장</span>
+      <span class="kw light accent ai d3">#청춘</span>
+      <span class="kw light accent ai d4">#열정</span>
+      <span class="kw light ai d5">#용기</span>
+      <span class="kw light ai d6">#사랑</span>
+      <span class="kw light ai d1">#미래</span>
+      <span class="kw light ai d2">#극복</span>
+      <span class="kw light ai d3">#두려움</span>
+      <span class="kw light ai d4">#인생</span>
+      <span class="kw light ai d5">#삶</span>
+      <span class="kw light ai d6">#원석</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2-C. 줄거리 -->
+<section id="kt-story" class="content-section bg-warm" data-section="10">
+  <div class="watermark light">꿈</div>
+  <div class="inner">
+    <p class="sec-label amber ai">STORY — 로그라인 + 줄거리</p>
+    <p class="logline-text light ai d1">
+      꿈을 찾아 방황하는 소녀 시즈쿠,<br />
+      이야기를 쓰며 자신만의 원석을 갈아 나가다.
+    </p>
+    <p class="synopsis-body light ai d2">
+      중학교 3학년 츠키시마 시즈쿠는 독서를 사랑하는 소녀다.
+      어느 날 우연히 알게 된 친구 아마사와 세이지는
+      이미 <strong style="color:#1d1000">바이올린 제작이라는 확고한 꿈</strong>을 향해 달려가고 있다.
+      그에 비해 아직 자신의 미래를 알지 못하는 시즈쿠.<br /><br />
+      세이지와의 만남이 계기가 되어, 시즈쿠는
+      처음으로 자신만의 이야기를 쓰기 시작한다.
+      도전과 두려움, 설렘과 방황 속에서
+      소녀는 조금씩, 그러나 분명하게 성장해 나간다.
+    </p>
+    <div class="fact-pill light ai d3">
+      <span class="fact-tag amber">GHIBLI</span>
+      <span class="fact-body light">スタジオジブリ · 1995년 · 콘도 요시후미 감독</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2-C2. 귀를 기울이면 이미지 갤러리 -->
+<div class="gallery-section bg-warm ai">
+  <div class="gallery-header">
+    <p class="sec-label amber" style="margin-bottom:0">STILLS — 스틸 이미지</p>
+  </div>
+  <div class="gallery-scroll" id="kt-gallery-scroll">
+    <img src="ghibli_final/1.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 1" />
+    <img src="ghibli_final/2.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 2" />
+    <img src="ghibli_final/3.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 3" />
+    <img src="ghibli_final/4.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 4" />
+    <img src="ghibli_final/5.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 5" />
+    <img src="ghibli_final/6.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 6" />
+    <img src="ghibli_final/7.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 7" />
+    <img src="ghibli_final/8.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 8" />
+    <img src="ghibli_final/9.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 9" />
+    <img src="ghibli_final/10.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 10" />
+    <img src="ghibli_final/11.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 11" />
+    <img src="ghibli_final/12.jpg" onclick="openLightbox(this)" alt="귀를 기울이면 스틸 12" />
+  </div>
+  <p class="gallery-hint" style="color:rgba(30,15,0,0.3)">← 드래그하여 더 보기</p>
+</div>
+
+<!-- 2-D. 선택 이유 -->
+<section id="kt-reason" class="content-section bg-light" data-section="11">
+  <div class="watermark light">DREAM</div>
+  <div class="inner">
+    <p class="sec-label amber ai">REASON — 작품 선정 이유</p>
+    <p class="reason-body light ai d1">
+      우리는 대부분 꿈을 가지고 살아갑니다.<br />
+      꿈은 우리에게 희망이 되며 살아갈 원동력이자 동기가 되기도 합니다.
+      그러나 꿈이 없는 사람도 분명 존재합니다.
+      좌절과 실패를 겪으며 꿈은 허상으로 바뀌고,
+      때로는 추상적인 개념으로만 느껴지기도 합니다.<br /><br />
+      그럴 때마다 사람들은 꿈을 포기하고 자신을 미워하곤 합니다.<br />
+      영화 〈귀를 기울이면〉의 주인공 시즈쿠도 마찬가지입니다.
+      자신의 꿈을 정하지 못해 방황하고 도전을 망설입니다.
+      그러나 영화가 흐를수록 시즈쿠는 계속해서 성장해 나갑니다.<br /><br />
+      그 과정을 지켜보는 것만으로도,
+      <strong>실패와 방황은 결코 결과가 아닌 과정</strong>이라는 점을 다시금 상기하게 됩니다.
+    </p>
+  </div>
+</section>
+
+<!-- 2-E. 오아시스 -->
+<section id="kt-oasis" class="oasis-section light" data-section="12">
+  <p class="oasis-label amber ai">MY OASIS — 내 오아시스</p>
+  <div class="quote-lines">
+    <span class="qline light ai d1">아직 연마되지 않은 자연 그대로의 원석.</span>
+    <span class="qline light ai d2">그 자체로도 아름답지만,</span>
+    <span class="qline light ai d3">자기 속의 원석을 갈고 다듬어야 하지.</span>
+    <span class="qline accent-amber ai d4">노력이 많이 드는 일이야.</span>
+  </div>
+  <div class="quote-sep light ai d5"></div>
+  <div class="quote-lines">
+    <span class="qline-sm light ai d5">두려워 말고 가자.</span>
+    <span class="qline-sm light ai d6">저녁바람을 타고, 별까지 손이 닿도록!</span>
+  </div>
+  <p class="oasis-attr ai d6" style="color:rgba(30,15,0,0.3)">— 영화 〈귀를 기울이면〉 중</p>
+</section>
+
+<!-- 2-F. 평론 -->
+<section id="kt-reviews" class="content-section bg-warm" data-section="13">
+  <div class="inner">
+    <p class="sec-label amber ai">CRITICS — 평론</p>
+    <div class="reviews-grid">
+      <div class="review-card light ai d1">
+        <div class="review-quote-mark amber">"</div>
+        <p class="review-text light">자신의 재능을 발견했을 때, 인생은 절반의 성공을 한 것이라고 생각한다.</p>
+        <p class="review-author amber">왓챠 리뷰</p>
+        <p class="review-role" style="color:rgba(30,15,0,0.4)">watcha.com · 관람객 리뷰</p>
+      </div>
+      <div class="review-card light ai d2">
+        <div class="review-quote-mark amber">"</div>
+        <p class="review-text light">힘차게 달려 오른 언덕에서의 일출 장면은 첫 입사 때의 감격과 견줄 만하다.</p>
+        <p class="review-author amber">왓챠 리뷰</p>
+        <p class="review-role" style="color:rgba(30,15,0,0.4)">watcha.com · 관람객 리뷰</p>
+      </div>
+      <div class="review-card light ai d3">
+        <div class="review-quote-mark amber">"</div>
+        <p class="review-text light">만남으로 커가고 꿈으로 커가는 이 소년과 소녀는 앞으로도 더 성장해 나갈 것이 분명하다. <strong style="color:#1d1000">우린 결국 행복해질 거야.</strong></p>
+        <p class="review-author amber">왓챠 리뷰</p>
+        <p class="review-role" style="color:rgba(30,15,0,0.4)">watcha.com · 관람객 리뷰</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     OUTRO
+══════════════════════════════════════════ -->
+<section id="outro" data-section="14">
+  <p class="outro-kicker ai">발표를 마치며</p>
+  <p class="outro-big ai d1">감사합니다.</p>
+  <div class="outro-meta ai d2">
+    <strong>전계현</strong> · 22319055<br />
+    계원예술대학교 · 2025.03<br /><br />
+    <span style="opacity:0.5">돈과 욕망의 세계, 〈작전〉</span><br />
+    <span style="opacity:0.5">꿈과 성장의 이야기, 〈귀를 기울이면〉</span>
+  </div>
+  <div class="sources-section ai d3">
+    <p>참고 출처</p>
+    <p>
+      <a href="https://namu.wiki/w/작전(영화)#s-6" target="_blank">나무위키 — 작전 (영화) 평가</a>
+      &nbsp;·&nbsp;
+      <a href="https://pedia.watcha.com/ko-KR/contents/mwWLxrW" target="_blank">왓챠피디아 — 귀를 기울이면</a>
+    </p>
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━ SCRIPT ━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+  /* ── Drag-to-scroll galleries ── */
+  document.querySelectorAll('.gallery-scroll').forEach(gallery => {
+    let isDown = false, startX, scrollLeft;
+    gallery.addEventListener('mousedown', e => {
+      isDown = true;
+      startX = e.pageX - gallery.offsetLeft;
+      scrollLeft = gallery.scrollLeft;
+    });
+    gallery.addEventListener('mouseleave', () => { isDown = false; });
+    gallery.addEventListener('mouseup', () => { isDown = false; });
+    gallery.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - gallery.offsetLeft;
+      gallery.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    });
+  });
+
+  /* ── Progress bar ── */
+  const progressBar = document.getElementById('progress-bar');
+  function updateProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = (scrollTop / docHeight) * 100;
+    progressBar.style.width = pct + '%';
+  }
+
+  /* ── Nav scroll style ── */
+  const topNav = document.getElementById('top-nav');
+  function updateNav() {
+    topNav.classList.toggle('scrolled', window.scrollY > 60);
+  }
+
+  /* ── Side dots ── */
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const sections = document.querySelectorAll('[data-section]');
+  function updateDots() {
+    let current = 0;
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - window.innerHeight / 2) {
+        current = parseInt(sec.dataset.section);
+      }
+    });
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+  }
+
+  /* ── Animate-in observer ── */
+  const animEls = document.querySelectorAll('.ai');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  animEls.forEach(el => observer.observe(el));
+
+  /* ── Scroll handler ── */
+  window.addEventListener('scroll', () => {
+    updateProgress();
+    updateNav();
+    updateDots();
+  }, { passive: true });
+
+  /* Initial run */
+  updateProgress(); updateNav(); updateDots();
+
+  /* ── Keyboard navigation ── */
+  const sectionEls = Array.from(sections);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      e.preventDefault();
+      const current = sectionEls.findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        return rect.top > -window.innerHeight / 2 && rect.top <= window.innerHeight / 2;
+      });
+      const next = sectionEls[Math.min(current + 1, sectionEls.length - 1)];
+      if (next) next.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      const current = sectionEls.findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        return rect.top > -window.innerHeight / 2 && rect.top <= window.innerHeight / 2;
+      });
+      const prev = sectionEls[Math.max(current - 1, 0)];
+      if (prev) prev.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  /* ── Lightbox ── */
+  let lbImages = [];
+  let lbIndex = 0;
+
+  function openLightbox(img) {
+    // Collect all images from the same gallery-scroll
+    const gallery = img.closest('.gallery-scroll');
+    lbImages = gallery ? Array.from(gallery.querySelectorAll('img')) : [img];
+    lbIndex = lbImages.indexOf(img);
+    showLbImage();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function showLbImage() {
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.style.opacity = '0';
+    lbImg.style.transform = 'scale(0.96)';
+    setTimeout(() => {
+      lbImg.src = lbImages[lbIndex].src;
+      lbImg.style.transition = 'opacity 0.2s, transform 0.2s';
+      lbImg.style.opacity = '1';
+      lbImg.style.transform = 'scale(1)';
+    }, 80);
+    document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+    document.querySelector('.lb-prev').disabled = lbIndex === 0;
+    document.querySelector('.lb-next').disabled = lbIndex === lbImages.length - 1;
+  }
+
+  function moveImage(dir) {
+    const next = lbIndex + dir;
+    if (next >= 0 && next < lbImages.length) {
+      lbIndex = next;
+      showLbImage();
+    }
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') { e.preventDefault(); moveImage(1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); moveImage(-1); }
+  });
+</script>
+</body>
+</html>
